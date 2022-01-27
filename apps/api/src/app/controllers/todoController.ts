@@ -1,0 +1,104 @@
+import { TodoModel } from '../models/todo';
+import { Request, Response } from 'express';
+import { getV4Id } from '../utils/uuidHandler';
+export const createTask = async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+    delete payload.uid;
+    payload.uid = getV4Id();
+    if (!payload) {
+      res.status(400).json({
+        message: 'No Payload Found',
+      });
+    }
+    const task = await TodoModel.create(payload);
+    res.status(201).json({
+      message: 'Task added succesfully',
+      data: task,
+    });
+  } catch (error) {
+    console.log(error, 'errors ');
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
+
+export const fetchAllTasks = async (req: Request, res: Response) => {
+  try {
+    const data = await TodoModel.findAll();
+    res.status(200).json({
+      message: 'Task List fetched succesfully',
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
+
+export const removeAll = async (req: Request, res: Response) => {
+  try {
+    await TodoModel.drop();
+    await TodoModel.sync();
+    res.status(200).json({
+      message: 'Tasks Delete successfully',
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
+
+export const fetchTaskById = async (req: Request, res: Response) => {
+  try {
+    if (!req?.params?.id) {
+      res.status(400).json({
+        message: 'No Params found for the request',
+      });
+    }
+    const data = await TodoModel.findOne({
+      where: {
+        uid: req.params.id,
+      },
+    });
+    res.status(200).json({
+      message: 'Task fetched successfully',
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
+
+export const updateTask = async (req: Request, res: Response) => {
+  try {
+    if (!req?.params?.id) {
+      res.status(400).json({
+        message: 'No Params found for the request',
+      });
+    }
+    const data = await TodoModel.update(req.body, {
+      where: {
+        uid: req.params.id,
+      },
+    });
+    res.status(200).json({
+      message: 'Task updated successfully',
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
