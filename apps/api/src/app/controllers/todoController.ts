@@ -1,15 +1,20 @@
 import { TodoModel } from '../models/todo';
 import { Request, Response } from 'express';
 import { getV4Id } from '../utils/uuidHandler';
+import { verifyToken } from '../middlewares/authentication';
 export const createTask = async (req: Request, res: Response) => {
   try {
     const payload = req.body;
     delete payload.uid;
-    payload.uid = getV4Id();
+    payload.taskId = getV4Id();
     if (!payload) {
       res.status(400).json({
         message: 'No Payload Found',
       });
+    }
+    const { id } = await verifyToken(req?.headers?.authorization);
+    if (id) {
+      payload.uid = id;
     }
     const task = await TodoModel.create(payload);
     res.status(201).json({
@@ -27,12 +32,14 @@ export const createTask = async (req: Request, res: Response) => {
 
 export const fetchAllTasks = async (req: Request, res: Response) => {
   try {
-    const data = await TodoModel.findAll();
+    const { id } = await verifyToken(req?.headers?.authorization);
+    const data = await TodoModel.findAll({where:{uid:id}});
     res.status(200).json({
       message: 'Task List fetched succesfully',
       data: data,
     });
   } catch (error) {
+    console.log(error,'errors')
     res.status(400).json({
       message: 'something went wrong',
       error,

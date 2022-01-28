@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createToken } from '../middlewares/authentication';
 import { UserModel } from '../models/user';
+import { decryptHash } from '../utils/hashManager';
 import { getV4Id } from '../utils/uuidHandler';
 export const loginHandler = async (req: Request, res: Response) => {
   try {
@@ -10,20 +11,31 @@ export const loginHandler = async (req: Request, res: Response) => {
         message: 'No Payload Found',
       });
     }
-    const user: any = await UserModel.findOne({
+    const user = await UserModel.findOne({
       where: {
         email: req.body.email || '',
       },
     });
+    // attributes: { exclude: ['password', 'updatedAt'] },
     if (user) {
-      const token = await createToken(
-        JSON.stringify({ id: user.uid, type: 'user' })
+      const userResponse = user.toJSON();
+      const compareHash = await decryptHash(
+        payload.password,
+        userResponse.password
       );
-      res.status(200).json({
-        message: 'LoggedIn successfully',
-        data: user,
-        token,
-      });
+      if (compareHash) {
+        const token = await createToken(
+          JSON.stringify({ id: userResponse.uid, type: 'user' })
+        );
+        delete userResponse.password;
+        delete userResponse.updatedAt;
+        delete userResponse.active;
+        res.status(200).json({
+          message: 'LoggedIn successfully',
+          data: userResponse,
+          token,
+        });
+      }
     } else {
       res.status(400).json({
         message: 'No user with this email exists',
@@ -48,13 +60,17 @@ export const registerHandler = async (req: Request, res: Response) => {
         message: 'No Payload Found',
       });
     }
-    const task = await UserModel.create(payload);
+    const user = await UserModel.create(payload);
     const token = await createToken(
       JSON.stringify({ id: payload.uid, type: 'user' })
     );
+    const response = user.toJSON();
+    delete response.password;
+    delete response.active;
+    delete response.updatedAt;
     res.status(201).json({
       message: 'Account created succesfully',
-      data: task,
+      data: response,
       token,
     });
   } catch (error) {

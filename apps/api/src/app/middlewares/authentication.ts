@@ -34,19 +34,16 @@ export async function authHandler(
     res.status(400).json({
       message: 'No Auth token found',
     });
+    return;
   }
   try {
     const tokenDetails = await verifyToken(req?.headers?.authorization);
     if (tokenDetails) {
       next();
-    } else {
-      res.status(401).json({
-        message: 'Invalid token passed,please check the token',
-      });
     }
   } catch (error) {
-    res.status(400).json({
-      message: 'Something went wrong while decoding the token',
+    res.status(401).json({
+      message: 'Invalid token passed,please check the token',
     });
   }
 }

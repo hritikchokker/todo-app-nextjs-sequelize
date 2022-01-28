@@ -2,6 +2,8 @@ import app from './app/app';
 // import * as cluster from 'cluster';
 // const clusterModule: any = cluster;
 import sequelize from './app/database/connection';
+import { TodoModel } from './app/models/todo';
+import { UserModel } from './app/models/user';
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
@@ -10,7 +12,11 @@ const server = app.listen(port, () => {
 (async function () {
   try {
     await sequelize.authenticate();
-
+    UserModel.hasMany(TodoModel, { as: 'tasks' });
+    TodoModel.belongsTo(UserModel, { foreignKey: 'uid',as:'user' });
+    await sequelize.sync();
+    await TodoModel.sync();
+    await UserModel.sync();
     // const { TodoModel } = sequelize.models;
     // await TodoModel.sync();
     console.log('connected to db');

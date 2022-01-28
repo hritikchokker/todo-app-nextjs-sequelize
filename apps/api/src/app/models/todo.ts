@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/connection';
+import { UserModel } from './user';
 export const TodoModel = sequelize.define(
   'todo',
   {
@@ -9,7 +10,7 @@ export const TodoModel = sequelize.define(
     creater: {
       type: DataTypes.TEXT,
     },
-    uid: {
+    taskId: {
       type: DataTypes.UUID,
       primaryKey: true,
     },
@@ -29,7 +30,4 @@ export const TodoModel = sequelize.define(
     freezeTableName: true,
   }
 );
-(async function () {
-  await TodoModel.sync();
-})();
 sequelize.models.TodoModel = TodoModel;
