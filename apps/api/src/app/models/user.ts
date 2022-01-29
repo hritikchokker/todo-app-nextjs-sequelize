@@ -1,15 +1,24 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/connection';
 import { createHashSync } from '../utils/hashManager';
-import { TodoModel } from './todo';
 export const UserModel = sequelize.define(
   'user',
   {
     firstName: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        min: 4,
+        max: 50,
+      },
     },
     lastName: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        min: 4,
+        max: 50,
+      },
     },
     uid: {
       type: DataTypes.UUID,
@@ -18,6 +27,10 @@ export const UserModel = sequelize.define(
     email: {
       type: DataTypes.TEXT,
       unique: true,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
     },
     createdAt: {
       type: DataTypes.DATE,

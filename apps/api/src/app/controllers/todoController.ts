@@ -14,7 +14,7 @@ export const createTask = async (req: Request, res: Response) => {
     }
     const { id } = await verifyToken(req?.headers?.authorization);
     if (id) {
-      payload.uid = id;
+      payload.userUid = id;
     }
     const task = await TodoModel.create(payload);
     res.status(201).json({
@@ -33,7 +33,7 @@ export const createTask = async (req: Request, res: Response) => {
 export const fetchAllTasks = async (req: Request, res: Response) => {
   try {
     const { id } = await verifyToken(req?.headers?.authorization);
-    const data = await TodoModel.findAll({where:{uid:id}});
+    const data = await TodoModel.findAll({ where: { userUid: id } });
     res.status(200).json({
       message: 'Task List fetched succesfully',
       data: data,

@@ -6,9 +6,19 @@ export const TodoModel = sequelize.define(
   {
     task: {
       type: DataTypes.TEXT,
+      validate: {
+        min: 4,
+        max: 2000,
+      },
+      allowNull: false,
     },
     creater: {
       type: DataTypes.TEXT,
+      validate: {
+        min: 4,
+        max: 50,
+      },
+      allowNull: false,
     },
     taskId: {
       type: DataTypes.UUID,
@@ -16,6 +26,7 @@ export const TodoModel = sequelize.define(
     },
     isImmediate: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

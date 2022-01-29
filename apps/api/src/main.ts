@@ -13,7 +13,8 @@ const server = app.listen(port, () => {
   try {
     await sequelize.authenticate();
     UserModel.hasMany(TodoModel, { as: 'tasks' });
-    TodoModel.belongsTo(UserModel, { foreignKey: 'uid',as:'user' });
+    TodoModel.belongsTo(UserModel);
+    // await sequelize.sync({force:true});
     await sequelize.sync();
     await TodoModel.sync();
     await UserModel.sync();
