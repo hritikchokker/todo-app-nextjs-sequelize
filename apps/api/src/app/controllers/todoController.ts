@@ -39,7 +39,7 @@ export const fetchAllTasks = async (req: Request, res: Response) => {
       data: data,
     });
   } catch (error) {
-    console.log(error,'errors')
+    console.log(error, 'errors');
     res.status(400).json({
       message: 'something went wrong',
       error,
@@ -70,9 +70,7 @@ export const fetchTaskById = async (req: Request, res: Response) => {
       });
     }
     const data = await TodoModel.findOne({
-      where: {
-        uid: req.params.id,
-      },
+      where: { userUid: req?.params?.id },
     });
     res.status(200).json({
       message: 'Task fetched successfully',
@@ -94,9 +92,29 @@ export const updateTask = async (req: Request, res: Response) => {
       });
     }
     const data = await TodoModel.update(req.body, {
-      where: {
-        uid: req.params.id,
-      },
+      where: { userUid: req?.params?.id },
+    });
+    res.status(200).json({
+      message: 'Task updated successfully',
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'something went wrong',
+      error,
+    });
+  }
+};
+
+export const removeTask = async (req: Request, res: Response) => {
+  try {
+    if (!req?.params?.id) {
+      res.status(400).json({
+        message: 'No Params found for the request',
+      });
+    }
+    const data = await TodoModel.destroy({
+      where: { userUid: req?.params?.id },
     });
     res.status(200).json({
       message: 'Task updated successfully',

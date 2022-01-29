@@ -4,6 +4,7 @@ import {
   fetchAllTasks,
   fetchTaskById,
   removeAll,
+  removeTask,
   updateTask,
 } from '../controllers/todoController';
 import URL from '../constants/api-urls';
@@ -24,4 +25,6 @@ todoRouter.get(URL.TODO_URLS.PARAM, authHandler, fetchTaskById);
 // update by id
 todoRouter.put(URL.TODO_URLS.PARAM, authHandler, updateTask);
 todoRouter.patch(URL.TODO_URLS.PARAM, authHandler, updateTask);
+todoRouter.delete(URL.TODO_URLS.PARAM, authHandler, removeTask);
+
 export default todoRouter;
