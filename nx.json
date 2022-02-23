@@ -1,10 +1,10 @@
 {
-  "npmScope": "todo-complete",
+  "npmScope": "todo-app",
   "affected": {
     "defaultBase": "master"
   },
   "cli": {
-    "defaultCollection": "@nrwl/express"
+    "defaultCollection": "@nrwl/nest"
   },
   "implicitDependencies": {
     "package.json": {
@@ -33,11 +33,14 @@
   "generators": {
     "@nrwl/react": {
       "application": {
+        "style": "scss",
+        "linter": "eslint",
         "babel": true
-      }
-    },
-    "@nrwl/next": {
-      "application": {
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
         "style": "scss",
         "linter": "eslint"
       }

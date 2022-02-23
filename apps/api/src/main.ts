@@ -1,38 +1,31 @@
-import app from './app/app';
-// import * as cluster from 'cluster';
-// const clusterModule: any = cluster;
-import sequelize from './app/database/connection';
-import { TodoModel } from './app/models/todo';
-import { UserModel } from './app/models/user';
-const port = process.env.port || 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-// database connection
-(async function () {
-  try {
-    await sequelize.authenticate();
-    UserModel.hasMany(TodoModel, { as: 'tasks' });
-    TodoModel.belongsTo(UserModel);
-    // await sequelize.sync({force:true});
-    await sequelize.sync();
-    await TodoModel.sync();
-    await UserModel.sync();
-    // const { TodoModel } = sequelize.models;
-    // await TodoModel.sync();
-    console.log('connected to db');
-  } catch (error) {
-    console.error('connection to DB failed', error);
-  }
-})();
-server.on('error', console.error);
-// let CPUS_COUNT = 0;
-// if (clusterModule.isPrimary) {
-//   if (CPUS_COUNT < 4) {
-//     CPUS_COUNT--;
-//     console.log('new cluster forked');
-//     clusterModule.fork();
-//   }
-// } else {
+/**
+ * This is not a production server yet!
+ * This is only a minimal backend to get started.
+ */
 
-// }
+import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app/app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const config = new DocumentBuilder()
+    .setTitle('Todo example')
+    .setDescription('Todo App example apps')
+    .setVersion('1.0')
+    .addTag('Todo')
+    .build();
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  const port = process.env.PORT || 3333;
+  app.enableCors();
+  await app.listen(port);
+  Logger.log(
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+  );
+}
+
+bootstrap();
