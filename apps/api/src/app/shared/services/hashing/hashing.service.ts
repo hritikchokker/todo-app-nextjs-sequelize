@@ -3,8 +3,8 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class HashingService {
   salt = 10;
-  createHash(password: string): Promise<string | null> {
-    return bcrypt.hash(password, this.salt);
+  createHash(password: string): string | null {
+    return bcrypt.hashSync(password, this.salt);
   }
 
   compareHash(password: string, hash: string): Promise<boolean | null> {
