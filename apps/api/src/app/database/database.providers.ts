@@ -1,4 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
+import { Todo } from '../todo/entities/todo.entity';
+import { UserSession } from '../user/entities/session.entity';
+import { User } from '../user/entities/user.entity';
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -12,8 +15,13 @@ export const databaseProviders = [
         database: 'todo-app',
         logging: console.log,
       });
-      //   sequelize.addModels([Cat]);
+      sequelize.addModels([User, UserSession, Todo]);
+      User.hasMany(UserSession);
+      User.hasMany(Todo);
+      Todo.belongsTo(User);
+      UserSession.belongsTo(User);
       await sequelize.sync();
+      // await sequelize.sync({ force: true });
       console.log('connected to DB');
       return sequelize;
     },

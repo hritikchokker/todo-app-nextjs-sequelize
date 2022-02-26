@@ -1,5 +1,14 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
-@Table
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+} from 'sequelize-typescript';
+import { HashingService } from '../../shared/services/hashing/hashing.service';
+
+const hash = new HashingService();
+@Table({ timestamps: true, modelName: 'user' })
 export class User extends Model {
   @Column({
     type: DataType.TEXT,
@@ -26,6 +35,15 @@ export class User extends Model {
   uid: string;
   @Column({
     type: DataType.TEXT,
+    set(value) {
+      // Storing passwords in plaintext in the database is terrible.
+      // Hashing the value with an appropriate cryptographic hash function is better.
+      this.setDataValue('password', hash.createHash(value as string));
+    },
+  })
+  password: string;
+  @Column({
+    type: DataType.TEXT,
     unique: true,
     allowNull: false,
     validate: {
@@ -33,20 +51,6 @@ export class User extends Model {
     },
   })
   email: string;
-  @Column({
-    type: DataType.DATE,
-    set() {
-      this.setDataValue('createdAt', new Date().toISOString());
-    },
-  })
-  createdAt?: Date | string;
-  @Column({
-    type: DataType.DATE,
-    set() {
-      this.setDataValue('updatedAt', new Date().toISOString());
-    },
-  })
-  updatedAt?: Date | string;
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: true,
