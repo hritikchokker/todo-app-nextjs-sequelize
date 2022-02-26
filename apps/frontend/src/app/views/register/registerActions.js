@@ -1,4 +1,4 @@
-import axios from '../../../environments/instance';
+import axios from '../../utils/instance';
 import { Register } from './ActionTypes';
 
 function register(payload) {

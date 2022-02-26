@@ -1,4 +1,4 @@
-import axios from '../../../environments/instance';
+import axios from '../../utils/instance';
 import { Login } from './ActionTypes';
 
 function login(payload) {
