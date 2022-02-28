@@ -1,4 +1,4 @@
-import axios from '../../../environments/instance';
+import axios from '../../utils/instance';
 import { Register } from './ActionTypes';
 
 function register(payload) {
@@ -6,8 +6,10 @@ function register(payload) {
     dispatch(registerRequest());
     try {
       const res = await axios.post('/auth/register', payload);
+      // eslint-disable-next-line no-debugger
+      debugger;
       if (res && res.data) {
-        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('token', `Bearer ${res.token}`);
         dispatch(registerSuccess(res.data));
       }
     } catch (err) {

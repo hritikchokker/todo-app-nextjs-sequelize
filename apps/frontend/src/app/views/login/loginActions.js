@@ -1,4 +1,4 @@
-import axios from '../../../environments/instance';
+import axios from '../../utils/instance';
 import { Login } from './ActionTypes';
 
 function login(payload) {
@@ -7,8 +7,8 @@ function login(payload) {
     try {
       const res = await axios.post('/auth/login', payload);
       if (res && res.data && res.token) {
-        localStorage.setItem('token', res.token);
-        res.data.token = res.token;
+        localStorage.setItem('token', `Bearer ${res.token}`);
+        res.data.token = `res.token`;
         // debugger;
         dispatch(loginSuccess(res.data));
       }

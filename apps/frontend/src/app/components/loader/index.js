@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
+import "./loader.scss"
 
 function Loader() {
-  return (
-    <div>....Loader</div>
-  )
+  return <div className="loader">....Please Wait While Loading</div>;
 }
 
 export default Loader;
