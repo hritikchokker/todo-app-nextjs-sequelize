@@ -7,8 +7,7 @@ function register(payload) {
     try {
       const res = await axios.post('/auth/register', payload);
       // eslint-disable-next-line no-debugger
-      debugger;
-      if (res && res.data) {
+      if (res && res.token) {
         localStorage.setItem('token', `Bearer ${res.token}`);
         dispatch(registerSuccess(res.data));
       }

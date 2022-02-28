@@ -5,8 +5,6 @@ export const getList = () => {
   return async (dispatch) => {
     try {
       const res = await axios.get('/todo');
-      // eslint-disable-next-line no-debugger
-      debugger;
       if (res && res.data) {
         dispatch(getSuccess(res.data));
       }
@@ -55,7 +53,7 @@ export const getRemove = (taskId) => {
   return async (dispatch) => {
     try {
       const res = await axios.delete(`/todo/${taskId}`);
-      if (res && res.data) {
+      if (res) {
         dispatch(getList());
       }
     } catch (err) {

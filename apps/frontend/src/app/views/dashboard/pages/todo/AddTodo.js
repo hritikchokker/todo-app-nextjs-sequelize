@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getAdd } from './todoRedux/todoActions';
 
 function AddTodo() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [field, setField] = useState({
     task: 'First',
     creator: 'Belliary',
     isImmediate: false,
   });
+  const backNavigate = useSelector((state) => state.todo.redirectBack);
 
   const handleAdd = (data) => {
     data.preventDefault();
@@ -17,6 +19,11 @@ function AddTodo() {
     // console.log(data, "Data it is");
     dispatch(getAdd(field));
   };
+  useEffect(() => {
+    if (backNavigate) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [backNavigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +43,7 @@ function AddTodo() {
           type="creator"
           placeholder="Creator Name"
           value={field.creator}
-          name="creater"
+          name="creator"
           onChange={handleChange}
         />
         <input

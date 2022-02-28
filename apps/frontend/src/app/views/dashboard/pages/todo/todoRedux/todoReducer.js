@@ -5,6 +5,9 @@ const intialstate = {
   creator: '',
   isImmediate: false,
   tasksList: [],
+  taskDetails: null,
+  redirectBack: false,
+  updateList: false,
 };
 
 export function ToDoReducer(state = intialstate, action) {
@@ -13,6 +16,8 @@ export function ToDoReducer(state = intialstate, action) {
     case ToDo.ADD_TODO: {
       return {
         ...state,
+        redirectBack: true,
+        updateList: true,
         // tasksList: payload,
       };
     }
@@ -21,24 +26,29 @@ export function ToDoReducer(state = intialstate, action) {
       return {
         ...state,
         tasksList: payload,
+        redirectBack: false,
+        updateList: false,
       };
     }
 
     case ToDo.DETAIL_TODO: {
       return {
         ...state,
+        taskDetails: payload,
       };
     }
 
     case ToDo.REMOVE_TODO: {
       return {
         ...state,
+        updateList: true,
       };
     }
 
     case ToDo.UPDATE_TODO: {
       return {
         ...state,
+        taskDetails: null,
       };
     }
 

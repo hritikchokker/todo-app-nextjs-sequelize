@@ -6,12 +6,13 @@ import { useNavigate } from 'react-router-dom';
 function TodoList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const updateList = useSelector((state) => state.todo.updateList);
+  const list = useSelector((state) => state.todo.tasksList);
+  console.log(updateList,'updateList');
   useEffect(() => {
     dispatch(getList());
-  }, []);
+  }, [updateList]);
 
-  const list = useSelector((state) => state.todo.tasksList);
   // const help = useSelector((state) => state);
   // eslint-disable-next-line no-debugger
   // debugger;
