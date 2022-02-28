@@ -4,9 +4,11 @@ import Header from '../../components/header';
 import Loader from '../../components/loader';
 import UserDetails from './pages/user/userDetails';
 import UserList from './pages/user/userList';
+
 const TodoList = React.lazy(() => import('./pages/todo/todoList'));
 const TodoDetails = React.lazy(() => import('./pages/todo/todoDetails'));
-const AddEditTodo = React.lazy(() => import('./pages/todo/addEditTodo'));
+const AddTodo = React.lazy(() => import('./pages/todo/AddTodo'));
+const EditTodo = React.lazy(() => import('./pages/todo/EditTodo'));
 function DashboardRoutes() {
   return (
     <>
@@ -25,7 +27,7 @@ function DashboardRoutes() {
           element={
             <React.Suspense fallback={<Loader />}>
               {/* PrivateRoute For Edit */}
-              <AddEditTodo />
+              <AddTodo />
               {/* PrivateRoute For Edit */}
             </React.Suspense>
           }
@@ -34,14 +36,14 @@ function DashboardRoutes() {
           path="/edit/:id"
           element={
             <React.Suspense fallback={<Loader />}>
-              <AddEditTodo />
+              <EditTodo />
             </React.Suspense>
           }
         />
         <Route path="/user" element={<UserList />} />
         <Route path="/user/:id" element={<UserDetails />} />
         <Route
-          path=":id"
+          path="/:id"
           element={
             <React.Suspense fallback={<Loader />}>
               <TodoDetails />

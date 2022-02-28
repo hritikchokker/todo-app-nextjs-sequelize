@@ -11,7 +11,7 @@ export const databaseProviders = [
         host: 'localhost',
         port: 5432,
         username: 'postgres',
-        password: '1234',
+        password: '12345',
         database: 'todo-app',
         logging: console.log,
       });
@@ -20,8 +20,8 @@ export const databaseProviders = [
       User.hasMany(Todo);
       Todo.belongsTo(User);
       UserSession.belongsTo(User);
-      await sequelize.sync();
-      // await sequelize.sync({ force: true });
+      // await sequelize.sync();
+      await sequelize.sync({ force: true });
       console.log('connected to DB');
       return sequelize;
     },

@@ -26,7 +26,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
-    // debugger;
     return response && response.data;
   },
   function (error) {
